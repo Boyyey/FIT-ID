@@ -185,6 +185,8 @@ When deploying on Render with the root `Dockerfile`, set the public application 
 Your Google Cloud OAuth authorized redirect URI must match:
 - `https://<your-render-service>.onrender.com/api/auth/callback/google`
 
+For the frontend API base on Render, keep `NEXT_PUBLIC_API_BASE` set to `/api/v1` when you are proxying both frontend and backend through the same host.
+
 If the callback URI does not exactly match this value, Google sign-in will fail with `invalid_client`.
 
 ## API Endpoints (MVP)

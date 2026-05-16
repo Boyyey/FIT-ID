@@ -1,19 +1,34 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const nextAuthUrl = process.env.NEXTAUTH_URL;
+const googleClientId = process.env.GOOGLE_CLIENT_ID ?? "";
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET ?? "";
+const nextAuthUrl = process.env.NEXTAUTH_URL ?? "";
 
-if (!googleClientId || !googleClientSecret) {
-  throw new Error(
-    "Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables for NextAuth Google OAuth."
+const providers = [];
+if (googleClientId && googleClientSecret) {
+  providers.push(
+    Google({
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
+      authorization: {
+        params: {
+          scope: "openid email profile",
+          prompt: "select_account",
+        },
+      },
+      idToken: true,
+    })
+  );
+} else {
+  console.warn(
+    "NEXTAUTH WARNING: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set. Google sign-in will fail until these variables are provided."
   );
 }
 
 if (!nextAuthUrl) {
-  throw new Error(
-    "Missing NEXTAUTH_URL environment variable for NextAuth. Set NEXTAUTH_URL to your public app URL, e.g. https://your-render-service.onrender.com"
+  console.warn(
+    "NEXTAUTH WARNING: NEXTAUTH_URL is not set. Set NEXTAUTH_URL to your public application URL for production deployments."
   );
 }
 

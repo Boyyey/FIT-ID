@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: fitid
+    env: docker
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    plan: starter
+    envVars:
+      - key: NEXTAUTH_URL
+      - key: NEXTAUTH_SECRET
+      - key: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_SECRET
+      - key: ALLOWED_ORIGINS
+      - key: NEXT_PUBLIC_API_BASE
+      - key: JWT_SECRET
+      - key: DATABASE_URL
+      - key: FITID_PUBLIC_URL
+      - key: OAUTH_DEMO_CLIENT_ID
+      - key: OAUTH_DEMO_CLIENT_SECRET
+      - key: OAUTH_DEMO_REDIRECT_URIS
