@@ -32,6 +32,18 @@ if (!nextAuthUrl) {
   );
 }
 
+// Runtime debug: log non-sensitive presence of important env vars (temporary)
+try {
+  // Do not log secrets themselves.
+  // Log presence/status so you can inspect Render logs to confirm runtime config.
+  // eslint-disable-next-line no-console
+  console.log("NEXTAUTH_RUNTIME: NEXTAUTH_URL=", nextAuthUrl || "<unset>");
+  // eslint-disable-next-line no-console
+  console.log("NEXTAUTH_RUNTIME: GOOGLE_CLIENT_ID=", googleClientId ? "<set>" : "<unset>");
+} catch (e) {
+  // ignore
+}
+
 const handler = NextAuth({
   providers: [
     Google({
