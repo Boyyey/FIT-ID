@@ -141,6 +141,8 @@ export default function HomePage() {
               {busy ? "Signing in…" : "Sign in"}
             </button>
           </form>
+
+            <p className="subtitle" style={{ margin: 0 }}>
               Need an account?{" "}
               <Link href="/register" style={{ fontWeight: 700 }}>
                 Create one (Shopper or Business)
