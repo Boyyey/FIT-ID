@@ -174,6 +174,19 @@ Set required env values in `backend/.env`:
 - `GOOGLE_CLIENT_ID`
 - `ALLOWED_ORIGINS`
 
+### Render deployment notes
+When deploying on Render with the root `Dockerfile`, set the public application URL in `NEXTAUTH_URL` and use the same domain for the Google OAuth callback.
+- `NEXTAUTH_URL` = `https://<your-render-service>.onrender.com`
+- `NEXTAUTH_SECRET` = long random string
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` from Google Cloud
+- `ALLOWED_ORIGINS` = `https://<your-render-service>.onrender.com`
+- `NEXT_PUBLIC_API_BASE` can remain `/api/v1` when the API is proxied from the same host
+
+Your Google Cloud OAuth authorized redirect URI must match:
+- `https://<your-render-service>.onrender.com/api/auth/callback/google`
+
+If the callback URI does not exactly match this value, Google sign-in will fail with `invalid_client`.
+
 ## API Endpoints (MVP)
 
 Base URL: `http://localhost:8000/api/v1`

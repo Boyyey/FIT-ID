@@ -42,6 +42,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     dirmngr \
     nginx \
+    libglib2.0-0 \
+    libsm6 \
+    libxrender1 \
+    libxext6 \
+    libx11-6 \
+    libxcb1 \
+    libgl1 \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
