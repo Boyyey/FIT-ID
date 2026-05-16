@@ -153,7 +153,6 @@ export default function HomePage() {
                 Alternate sign-in page →
               </Link>
             </p>
-          </div>
         </div>
       </section>
     </main>
