@@ -7,11 +7,14 @@ services:
     plan: starter
     envVars:
       - key: NEXTAUTH_URL
+        value: "https://fit-id-uzzj.onrender.com"
       - key: NEXTAUTH_SECRET
       - key: GOOGLE_CLIENT_ID
       - key: GOOGLE_CLIENT_SECRET
       - key: ALLOWED_ORIGINS
+        value: "https://fit-id-uzzj.onrender.com"
       - key: NEXT_PUBLIC_API_BASE
+        value: "/api/v1"
       - key: JWT_SECRET
       - key: DATABASE_URL
       - key: FITID_PUBLIC_URL

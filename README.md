@@ -175,19 +175,35 @@ Set required env values in `backend/.env`:
 - `ALLOWED_ORIGINS`
 
 ### Render deployment notes
-When deploying on Render with the root `Dockerfile`, set the public application URL in `NEXTAUTH_URL` and use the same domain for the Google OAuth callback.
-- `NEXTAUTH_URL` = `https://<your-render-service>.onrender.com`
-- `NEXTAUTH_SECRET` = long random string
-- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` from Google Cloud
-- `ALLOWED_ORIGINS` = `https://<your-render-service>.onrender.com`
-- `NEXT_PUBLIC_API_BASE` can remain `/api/v1` when the API is proxied from the same host
+When deploying on Render with the root `Dockerfile` to your site `https://fit-id-uzzj.onrender.com`, set these environment variables in the Render dashboard (or via `render.yaml`):
 
-Your Google Cloud OAuth authorized redirect URI must match:
-- `https://<your-render-service>.onrender.com/api/auth/callback/google`
+- `NEXTAUTH_URL` = `https://fit-id-uzzj.onrender.com`
+- `NEXTAUTH_SECRET` = long random string (keep private)
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` = values from Google Cloud (keep private)
+- `ALLOWED_ORIGINS` = `https://fit-id-uzzj.onrender.com`
+- `NEXT_PUBLIC_API_BASE` = `/api/v1` (recommended when proxying frontend + backend on same host)
 
-For the frontend API base on Render, keep `NEXT_PUBLIC_API_BASE` set to `/api/v1` when you are proxying both frontend and backend through the same host.
+Your Google Cloud OAuth authorized redirect URI must exactly match:
 
-If the callback URI does not exactly match this value, Google sign-in will fail with `invalid_client`.
+- `https://fit-id-uzzj.onrender.com/api/auth/callback/google`
+
+Steps to verify and fix the `http://localhost:3000` redirect issue you observed:
+
+1. In the Render dashboard for your `fitid` service, confirm `NEXTAUTH_URL` is set to `https://fit-id-uzzj.onrender.com` (not `http://localhost:3000`).
+2. In Google Cloud Console → OAuth 2.0 Client IDs, add the authorized redirect URI above.
+3. Redeploy the service on Render (or trigger an auto-deploy) so the runtime environment picks up the updated env vars.
+4. Test sign-in at `https://fit-id-uzzj.onrender.com` — the OAuth workflow should no longer try to redirect to `localhost`.
+
+If you prefer the Render CLI, you can set the environment variables from your machine (replace placeholders):
+
+```bash
+# install render CLI: https://render.com/docs/cli
+render services env set NEXTAUTH_URL=https://fit-id-uzzj.onrender.com --service <SERVICE-ID>
+render services env set ALLOWED_ORIGINS=https://fit-id-uzzj.onrender.com --service <SERVICE-ID>
+render services env set NEXT_PUBLIC_API_BASE=/api/v1 --service <SERVICE-ID>
+```
+
+Note: Do NOT commit `GOOGLE_CLIENT_SECRET` or `NEXTAUTH_SECRET` to the repo. Store them securely in Render environment variables.
 
 ## API Endpoints (MVP)
 
