@@ -119,60 +119,68 @@ export default function RegisterPage() {
           OR register with username
         </p>
 
-        <label className="subtitle" htmlFor="fn" style={{ display: "block", marginBottom: "0.35rem" }}>
-          Display name <span style={{ opacity: 0.7 }}>(optional)</span>
-        </label>
-        <input id="fn" className="input" placeholder="Alex Carter" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void onSubmit();
+          }}
+          style={{ display: "grid", gap: "0.85rem" }}
+        >
+          <label className="subtitle" htmlFor="fn" style={{ display: "block", marginBottom: "0.35rem" }}>
+            Display name <span style={{ opacity: 0.7 }}>(optional)</span>
+          </label>
+          <input id="fn" className="input" placeholder="Alex Carter" value={fullName} onChange={(e) => setFullName(e.target.value)} />
 
-        <label className="subtitle" htmlFor="user" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
-          Username
-        </label>
-        <input
-          id="user"
-          className="input"
-          autoComplete="username"
-          placeholder="letters_numbers_underscore"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <label className="subtitle" htmlFor="pwd" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
-          Password (min 8 characters)
-        </label>
-        <div style={{ position: "relative" }}>
+          <label className="subtitle" htmlFor="user" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
+            Username
+          </label>
           <input
-            id="pwd"
+            id="user"
             className="input"
-            style={{ paddingRight: "52px" }}
-            type={visible ? "text" : "password"}
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="username"
+            placeholder="letters_numbers_underscore"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
-          <button
-            type="button"
-            className="button secondary"
-            aria-label={visible ? "Hide password" : "Show password"}
-            onClick={() => setVisible((v) => !v)}
-            style={{
-              position: "absolute",
-              right: 6,
-              top: "50%",
-              transform: "translateY(-50%)",
-              padding: "0.42rem",
-              borderRadius: "12px",
-              minWidth: 44,
-              display: "grid",
-              placeItems: "center"
-            }}
-          >
-            {visible ? <EyeClosed /> : <EyeOpen />}
-          </button>
-        </div>
 
-        <button className="button" style={{ marginTop: "1.15rem", width: "100%" }} disabled={busy} onClick={() => void onSubmit()}>
-          {busy ? "Creating account…" : `Create ${accountType} account`}
-        </button>
+          <label className="subtitle" htmlFor="pwd" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
+            Password (min 8 characters)
+          </label>
+          <div style={{ position: "relative" }}>
+            <input
+              id="pwd"
+              className="input"
+              style={{ paddingRight: "52px" }}
+              type={visible ? "text" : "password"}
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="button secondary"
+              aria-label={visible ? "Hide password" : "Show password"}
+              onClick={() => setVisible((v) => !v)}
+              style={{
+                position: "absolute",
+                right: 6,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: "0.42rem",
+                borderRadius: "12px",
+                minWidth: 44,
+                display: "grid",
+                placeItems: "center"
+              }}
+            >
+              {visible ? <EyeClosed /> : <EyeOpen />}
+            </button>
+          </div>
+
+          <button type="submit" className="button" style={{ marginTop: "1.15rem", width: "100%" }} disabled={busy}>
+            {busy ? "Creating account…" : `Create ${accountType} account`}
+          </button>
+        </form>
 
         {error && <p style={{ color: "#b91c1c", marginTop: "0.85rem", marginBottom: 0 }}>{error}</p>}
 

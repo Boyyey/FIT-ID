@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000/api/v1";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api/v1";
 
 export type FitIdAuthPayload = {
   access_token: string;
@@ -18,7 +18,7 @@ export async function exchangeGoogleToken(googleIdToken: string): Promise<FitIdA
   const unreachableHint =
     `Cannot reach the FitID API at ${API_BASE} (connection refused or network error). ` +
     `Start the backend: from the backend folder run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000, ` +
-    `or docker compose up. Ensure NEXT_PUBLIC_API_BASE in .env.local matches that URL.`;
+    `or docker compose up. If deployed to Render, set NEXT_PUBLIC_API_BASE to your public service URL or keep the default relative path /api/v1 when the API is proxied through the same host.`;
 
   let response: Response;
   try {

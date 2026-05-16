@@ -15,6 +15,7 @@ const handler = NextAuth({
       idToken: true
     })
   ],
+  secret: process.env.NEXTAUTH_SECRET ?? "development-nextauth-secret",
   session: {
     strategy: "jwt"
   },

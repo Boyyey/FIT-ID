@@ -73,59 +73,64 @@ export default function SignInPage() {
           OR
         </p>
 
-        <label className="subtitle" htmlFor="user" style={{ display: "block", marginBottom: "0.35rem" }}>
-          Username
-        </label>
-        <input
-          id="user"
-          className="input"
-          autoComplete="username"
-          placeholder="your_username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <label className="subtitle" htmlFor="pwd" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
-          Password
-        </label>
-        <div style={{ position: "relative" }}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void onSubmit();
+          }}
+          style={{ display: "grid", gap: "0.75rem" }}
+        >
+          <label className="subtitle" htmlFor="user" style={{ display: "block", marginBottom: "0.35rem" }}>
+            Username
+          </label>
           <input
-            id="pwd"
+            id="user"
             className="input"
-            style={{ paddingRight: "52px" }}
-            type={visible ? "text" : "password"}
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void onSubmit();
-            }}
+            autoComplete="username"
+            placeholder="your_username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
-          <button
-            type="button"
-            className="button secondary"
-            aria-label={visible ? "Hide password" : "Show password"}
-            onClick={() => setVisible((v) => !v)}
-            style={{
-              position: "absolute",
-              right: 6,
-              top: "50%",
-              transform: "translateY(-50%)",
-              padding: "0.42rem",
-              borderRadius: "12px",
-              minWidth: 44,
-              display: "grid",
-              placeItems: "center"
-            }}
-          >
-            {visible ? <EyeClosed /> : <EyeOpen />}
-          </button>
-        </div>
 
-        <button className="button" style={{ marginTop: "1.1rem", width: "100%" }} disabled={busy} onClick={() => void onSubmit()}>
-          {busy ? "Signing in…" : "Sign in"}
-        </button>
+          <label className="subtitle" htmlFor="pwd" style={{ display: "block", marginTop: "0.85rem", marginBottom: "0.35rem" }}>
+            Password
+          </label>
+          <div style={{ position: "relative" }}>
+            <input
+              id="pwd"
+              className="input"
+              style={{ paddingRight: "52px" }}
+              type={visible ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="button secondary"
+              aria-label={visible ? "Hide password" : "Show password"}
+              onClick={() => setVisible((v) => !v)}
+              style={{
+                position: "absolute",
+                right: 6,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: "0.42rem",
+                borderRadius: "12px",
+                minWidth: 44,
+                display: "grid",
+                placeItems: "center"
+              }}
+            >
+              {visible ? <EyeClosed /> : <EyeOpen />}
+            </button>
+          </div>
+
+          <button type="submit" className="button" style={{ marginTop: "1.1rem", width: "100%" }} disabled={busy}>
+            {busy ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
 
         {error && <p style={{ color: "#b91c1c", marginTop: "0.85rem", marginBottom: 0 }}>{error}</p>}
 

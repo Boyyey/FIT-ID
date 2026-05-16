@@ -83,65 +83,64 @@ export default function HomePage() {
             OR
           </p>
 
-          <label className="subtitle" htmlFor="home-user">
-            Username
-          </label>
-          <input
-            id="home-user"
-            className="input"
-            autoComplete="username"
-            placeholder="your_username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-
-          <label className="subtitle" htmlFor="home-pwd">
-            Password
-          </label>
-          <div style={{ position: "relative" }}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void onSubmit();
+            }}
+            style={{ display: "grid", gap: "0.75rem" }}
+          >
+            <label className="subtitle" htmlFor="home-user">
+              Username
+            </label>
             <input
-              id="home-pwd"
+              id="home-user"
               className="input"
-              style={{ paddingRight: "52px" }}
-              type={visible ? "text" : "password"}
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") void onSubmit();
-              }}
+              autoComplete="username"
+              placeholder="your_username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
-            <button
-              type="button"
-              className="button secondary"
-              aria-label={visible ? "Hide password" : "Show password"}
-              onClick={() => setVisible((v) => !v)}
-              style={{
-                position: "absolute",
-                right: 6,
-                top: "50%",
-                transform: "translateY(-50%)",
-                padding: "0.42rem",
-                borderRadius: "12px",
-                minWidth: 44,
-                display: "grid",
-                placeItems: "center"
-              }}
-            >
-              {visible ? <EyeClosed /> : <EyeOpen />}
+
+            <label className="subtitle" htmlFor="home-pwd">
+              Password
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                id="home-pwd"
+                className="input"
+                style={{ paddingRight: "52px" }}
+                type={visible ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="button secondary"
+                aria-label={visible ? "Hide password" : "Show password"}
+                onClick={() => setVisible((v) => !v)}
+                style={{
+                  position: "absolute",
+                  right: 6,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: "0.42rem",
+                  borderRadius: "12px",
+                  minWidth: 44,
+                  display: "grid",
+                  placeItems: "center"
+                }}
+              >
+                {visible ? <EyeClosed /> : <EyeOpen />}
+              </button>
+            </div>
+
+            <button type="submit" className="button" disabled={busy}>
+              {busy ? "Signing in…" : "Sign in"}
             </button>
-          </div>
-
-          <button className="button" disabled={busy} onClick={() => void onSubmit()}>
-            {busy ? "Signing in…" : "Sign in"}
-          </button>
-
-          {error && <p style={{ color: "#b91c1c", margin: 0 }}>{error}</p>}
-
-          <div style={{ marginTop: "1rem", textAlign: "center", display: "grid", gap: "0.65rem" }}>
-            <span className="badge">FitID sign-in is for partner stores after profile creation</span>
-            <p className="subtitle" style={{ margin: 0 }}>
+          </form>
               Need an account?{" "}
               <Link href="/register" style={{ fontWeight: 700 }}>
                 Create one (Shopper or Business)

@@ -9,9 +9,6 @@ FROM node:22-alpine AS frontend-builder
 WORKDIR /frontend
 
 COPY frontend/package.json ./
-ENV NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000/api/v1
-ENV NEXTAUTH_URL=http://localhost:10000
-
 RUN npm install
 
 COPY frontend/ .
@@ -38,14 +35,13 @@ FROM python:3.12-slim
 WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 ENV PORT=10000
-ENV NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000/api/v1
-ENV NEXTAUTH_URL=http://localhost:10000
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     gnupg \
     dirmngr \
+    nginx \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
@@ -62,8 +58,9 @@ COPY --from=frontend-builder /frontend/node_modules ./frontend/node_modules
 COPY --from=frontend-builder /frontend/next.config.js ./frontend/next.config.js
 COPY --from=frontend-builder /frontend/next-env.d.ts ./frontend/next-env.d.ts
 
-WORKDIR /app/frontend
+COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 10000
+WORKDIR /app
+EXPOSE 80
 
-CMD bash -lc "cd /app/backend && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers & cd /app/frontend && npm run start -- -p ${PORT} --hostname 0.0.0.0"
+CMD bash -lc "cd /app/backend && uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers & cd /app/frontend && npm run start -- -p ${PORT} --hostname 127.0.0.1 & nginx -g 'daemon off;'"
