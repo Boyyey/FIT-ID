@@ -88,17 +88,24 @@ def init_db() -> None:
     last_error: Exception | None = None
     for attempt in range(1, settings.db_connect_max_retries + 1):
         try:
+            print(f"[DB] Attempt {attempt}/{settings.db_connect_max_retries}: Connecting to database...", flush=True)
             with engine.connect() as connection:
                 connection.execute(text("SELECT 1"))
+            print("[DB] Connection successful, creating tables...", flush=True)
             Base.metadata.create_all(bind=engine)
+            print("[DB] Tables created, running migrations...", flush=True)
             with engine.connect() as connection:
                 _migrate_sqlite_after_create(connection)
+            print("[DB] Migrations done, seeding demo OAuth client...", flush=True)
             with SessionLocal() as db:
                 _seed_demo_oauth_client(db)
+            print("[DB] Database initialization complete!", flush=True)
             return
         except Exception as exc:  # pragma: no cover - startup resilience path
+            print(f"[DB] ERROR on attempt {attempt}: {type(exc).__name__}: {exc}", flush=True)
             last_error = exc
             if attempt == settings.db_connect_max_retries:
                 break
             time.sleep(settings.db_connect_retry_delay_seconds)
+    print(f"[DB] FAILED after {settings.db_connect_max_retries} attempts", flush=True)
     raise RuntimeError("Database connection failed during startup") from last_error
