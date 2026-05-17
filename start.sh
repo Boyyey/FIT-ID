@@ -1,24 +1,33 @@
 #!/bin/sh
 set -e
 
+export NODE_ENV=production
+
 echo "FitID startup: launching backend, frontend, and nginx"
 
 cd /app/backend
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers > /tmp/backend.log 2>&1 &
+echo "FitID: starting backend at 127.0.0.1:8000"
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers 2>&1 &
 backend_pid=$!
-
 echo "FitID startup: backend PID=${backend_pid}"
 
-cd /app/frontend
-npm run start -- -p "${PORT:-10000}" --hostname 127.0.0.1 > /tmp/frontend.log 2>&1 &
-frontend_pid=$!
+sleep 2
 
+cd /app/frontend
+port="${PORT:-10000}"
+echo "FitID: starting frontend at 127.0.0.1:${port}"
+npm run start -- -p "${port}" --hostname 127.0.0.1 2>&1 &
+frontend_pid=$!
 echo "FitID startup: frontend PID=${frontend_pid}"
 
-nginx -g "daemon off;" &
-nginx_pid=$!
+sleep 3
 
+echo "FitID: starting nginx"
+nginx -g "daemon off;" 2>&1 &
+nginx_pid=$!
 echo "FitID startup: nginx PID=${nginx_pid}"
+
+echo "FitID: all processes started, monitoring..."
 
 while :; do
   if ! kill -0 "$backend_pid" 2>/dev/null; then
@@ -34,7 +43,7 @@ while :; do
     break
   fi
   sleep 1
- done
+done
 
 printf 'FitID startup: process exited, shutting down\n'
 kill "$backend_pid" "$frontend_pid" "$nginx_pid" 2>/dev/null || true
