@@ -49,8 +49,8 @@ which next || echo "  'next' not in PATH, trying npx..."
 echo ""
 echo "========== Starting Next.js Frontend =========="
 export PORT="${port}"
-echo "Launching: npx next start -p ${port} --hostname 0.0.0.0"
-npx next start -p "${port}" --hostname 0.0.0.0 2>&1 &
+echo "Launching: npx next start -p ${port} --hostname 127.0.0.1"
+npx next start -p "${port}" --hostname 127.0.0.1 2>&1 &
 frontend_pid=$!
 echo "Frontend PID: ${frontend_pid}"
 echo ""
