@@ -1,32 +1,31 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID ?? "";
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET ?? "";
-const nextAuthUrl = process.env.NEXTAUTH_URL ?? "";
+const googleClientId = process.env.GOOGLE_CLIENT_ID || "placeholder-google-client-id";
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET || "placeholder-google-client-secret";
+const nextAuthUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-const providers = [];
-if (googleClientId && googleClientSecret) {
-  providers.push(
-    Google({
-      clientId: googleClientId,
-      clientSecret: googleClientSecret,
-      authorization: {
-        params: {
-          scope: "openid email profile",
-          prompt: "select_account",
-        },
+const providers = [
+  Google({
+    clientId: googleClientId,
+    clientSecret: googleClientSecret,
+    authorization: {
+      params: {
+        scope: "openid email profile",
+        prompt: "select_account",
       },
-      idToken: true,
-    })
-  );
-} else {
-  console.error(
-    "NEXTAUTH ERROR: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in the environment for Google sign-in to work."
+    },
+    idToken: true,
+  }),
+];
+
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  console.warn(
+    "NEXTAUTH WARNING: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set. Google sign-in will fail until these variables are provided."
   );
 }
 
-if (!nextAuthUrl) {
+if (!process.env.NEXTAUTH_URL) {
   console.warn(
     "NEXTAUTH WARNING: NEXTAUTH_URL is not set. Set NEXTAUTH_URL to your public application URL for production deployments."
   );
@@ -34,16 +33,13 @@ if (!nextAuthUrl) {
 
 // Runtime debug: log non-sensitive presence of important env vars (temporary)
 try {
-  console.log("NEXTAUTH_RUNTIME: NEXTAUTH_URL=", nextAuthUrl || "<unset>");
-  console.log("NEXTAUTH_RUNTIME: GOOGLE_CLIENT_ID=", googleClientId ? "<set>" : "<unset>");
+  console.log("NEXTAUTH_RUNTIME: NEXTAUTH_URL=", process.env.NEXTAUTH_URL || "<unset>");
+  console.log(
+    "NEXTAUTH_RUNTIME: GOOGLE_CLIENT_ID=",
+    process.env.GOOGLE_CLIENT_ID ? "<set>" : "<unset>"
+  );
 } catch (e) {
   // ignore
-}
-
-if (providers.length === 0) {
-  throw new Error(
-    "NextAuth is not configured: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required."
-  );
 }
 
 const handler = NextAuth({
