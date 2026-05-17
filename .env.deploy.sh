@@ -6,6 +6,6 @@ GOOGLE_CLIENT_ID=r336622315969-3j1hl4cij00g9hrd1cd32u4812op9jag.apps.googleuserc
 GOOGLE_CLIENT_SECRET=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
 
 # Public URLs for deployed app:
-NNEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_API_BASE=http://localhost:8000/api/v1
-ALLOWED_ORIGINS=http://localhost:3000
+NEXTAUTH_URL=https://fit-id-uzzj.onrender.com
+NEXT_PUBLIC_API_BASE=https://fit-id-uzzj.onrender.com/api/v1
+ALLOWED_ORIGINS=https://fit-id-uzzj.onrender.com
