@@ -36,10 +36,13 @@ else
 fi
 echo ""
 echo ""
-echo "========== Safety Check: Reinstall Dependencies =========="
-echo "Running npm ci to ensure all dependencies are correct..."
-npm ci --prefer-offline --no-audit 2>&1 || echo "WARNING: npm ci failed but continuing..."
-echo ""
+echo "node_modules check:"
+if [ -d /app/frontend/node_modules ]; then
+  echo "✓ node_modules already present, skipping npm ci"
+else
+  echo "✗ ERROR: node_modules MISSING!"
+  exit 1
+fi
 echo ""
 echo "Checking for 'next' binary:"
 which next || echo "  'next' not in PATH, trying npx..."
