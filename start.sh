@@ -15,24 +15,58 @@ sleep 2
 
 cd /app/frontend
 port="${PORT:-10000}"
-echo "FitID: starting frontend at 127.0.0.1:${port}"
-echo "FitID: frontend directory listing:"
-ls -la /app/frontend/ | head -10
-echo "FitID: .next directory check:"
-ls -la /app/frontend/.next/ 2>/dev/null | head -5 || echo "ERROR: .next directory missing!"
+echo "========== FitID Frontend Diagnostics =========="
+echo "Current directory: $(pwd)"
+echo "PORT environment variable: ${port}"
+echo ""
+echo "Node and npm versions:"
+node --version
+npm --version
+echo ""
+echo "Frontend directory contents:"
+ls -la /app/frontend/ 2>/dev/null | head -15
+echo ""
+echo ".next build directory check:"
+if [ -d /app/frontend/.next ]; then
+  echo "✓ .next directory EXISTS"
+  ls -la /app/frontend/.next/ | head -10
+else
+  echo "✗ ERROR: .next directory MISSING!"
+  exit 1
+fi
+echo ""
+echo "node_modules check:"
+if [ -d /app/frontend/node_modules ]; then
+  echo "✓ node_modules directory EXISTS"
+  ls /app/frontend/node_modules | wc -l | xargs echo "  Total packages:"
+else
+  echo "✗ ERROR: node_modules MISSING!"
+  exit 1
+fi
+echo ""
+echo "Checking for 'next' binary:"
+which next || echo "  'next' not in PATH, trying npx..."
+echo ""
+echo "========== Starting Next.js Frontend =========="
 export PORT="${port}"
-echo "FitID: running npm run start with PORT=$PORT"
-npm run start 2>&1 &
+echo "Launching: npx next start -p ${port} --hostname 0.0.0.0"
+npx next start -p "${port}" --hostname 0.0.0.0 2>&1 &
 frontend_pid=$!
-echo "FitID startup: frontend PID=${frontend_pid}"
+echo "Frontend PID: ${frontend_pid}"
+echo ""
+echo "Waiting 10 seconds for frontend to bind to port ${port}..."
+sleep 10
 
-echo "FitID: waiting for frontend to bind to port ${port}..."
-sleep 8
-
-echo "FitID: starting nginx"
+echo "========== Starting nginx =========="
+echo "nginx.conf contents (first 30 lines):"
+head -30 /etc/nginx/nginx.conf
+echo ""
+echo "Launching nginx..."
 nginx -g "daemon off;" 2>&1 &
 nginx_pid=$!
-echo "FitID startup: nginx PID=${nginx_pid}"
+echo "nginx PID: ${nginx_pid}"
+echo "nginx startup complete"
+echo ""
 
 echo "FitID: all processes started, monitoring..."
 
