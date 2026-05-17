@@ -17,7 +17,7 @@ ENV NEXTAUTH_SECRET=placeholder-nextauth-secret
 ENV GOOGLE_CLIENT_ID=placeholder-google-client-id
 ENV GOOGLE_CLIENT_SECRET=placeholder-google-client-secret
 ENV NEXT_PUBLIC_API_BASE=/api/v1
-RUN npm run build
+RUN echo "Starting Next.js build..." && npm run build && echo "Build complete" && echo "Verifying .next directory:" && ls -la .next/ | head -20
 
 ################################################################
 # Backend build stage
