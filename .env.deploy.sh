@@ -1,9 +1,12 @@
 
-JWT_SECRET=a6277bc1ce63f9c51e45b556fd33f016d880288b5b351df9f21abadd9bc28027
-NEXTAUTH_SECRET=yxNuuBjr/vpdMpJRcrVgCe/dPQuidZ1gbhCh+Q6g95XDT5dVjJ2/so1/spc=
+# Copy this to ".env.deploy" and fill in real values before deploying.
+# Do NOT commit real secret values to the repo.
 
-GOOGLE_CLIENT_ID=r336622315969-3j1hl4cij00g9hrd1cd32u4812op9jag.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+JWT_SECRET=replace-with-long-random-secret
+NEXTAUTH_SECRET=replace-with-long-random-secret
+
+GOOGLE_CLIENT_ID=replace-with-google-client-id
+GOOGLE_CLIENT_SECRET=replace-with-google-client-secret
 
 # Public URLs for deployed app:
 NEXTAUTH_URL=https://fit-id-uzzj.onrender.com

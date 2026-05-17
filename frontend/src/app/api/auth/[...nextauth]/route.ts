@@ -21,8 +21,8 @@ if (googleClientId && googleClientSecret) {
     })
   );
 } else {
-  console.warn(
-    "NEXTAUTH WARNING: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is not set. Google sign-in will fail until these variables are provided."
+  console.error(
+    "NEXTAUTH ERROR: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in the environment for Google sign-in to work."
   );
 }
 
@@ -34,33 +34,23 @@ if (!nextAuthUrl) {
 
 // Runtime debug: log non-sensitive presence of important env vars (temporary)
 try {
-  // Do not log secrets themselves.
-  // Log presence/status so you can inspect Render logs to confirm runtime config.
-  // eslint-disable-next-line no-console
   console.log("NEXTAUTH_RUNTIME: NEXTAUTH_URL=", nextAuthUrl || "<unset>");
-  // eslint-disable-next-line no-console
   console.log("NEXTAUTH_RUNTIME: GOOGLE_CLIENT_ID=", googleClientId ? "<set>" : "<unset>");
 } catch (e) {
   // ignore
 }
 
+if (providers.length === 0) {
+  throw new Error(
+    "NextAuth is not configured: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required."
+  );
+}
+
 const handler = NextAuth({
-  providers: [
-    Google({
-      clientId: googleClientId,
-      clientSecret: googleClientSecret,
-      authorization: {
-        params: {
-          scope: "openid email profile",
-          prompt: "select_account"
-        }
-      },
-      idToken: true
-    })
-  ],
+  providers,
   secret: process.env.NEXTAUTH_SECRET ?? "development-nextauth-secret",
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
   callbacks: {
     async jwt({ token, account }) {
