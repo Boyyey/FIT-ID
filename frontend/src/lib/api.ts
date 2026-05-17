@@ -162,7 +162,15 @@ async function reqJson(method: string, path: string, body?: Record<string, unkno
   }
   const response = await fetch(`${API_BASE}${path}`, opts);
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload?.detail != null ? String(payload.detail) : response.statusText);
+  if (!response.ok) {
+    let msg = response.statusText;
+    if (payload?.detail != null) {
+      msg = typeof payload.detail === "string" ? payload.detail : JSON.stringify(payload.detail);
+    } else if (Object.keys(payload || {}).length > 0) {
+      msg = JSON.stringify(payload);
+    }
+    throw new Error(msg);
+  }
   return payload;
 }
 
