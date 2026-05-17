@@ -66,11 +66,10 @@ COPY --from=backend-builder /backend/app ./backend/app
 COPY --from=frontend-builder /frontend/.next ./frontend/.next
 COPY --from=frontend-builder /frontend/public ./frontend/public
 COPY --from=frontend-builder /frontend/package.json ./frontend/package.json
-COPY --from=frontend-builder /frontend/package-lock.json ./frontend/package-lock.json 2>/dev/null || echo "No package-lock.json"
 COPY --from=frontend-builder /frontend/node_modules ./frontend/node_modules
 COPY --from=frontend-builder /frontend/next.config.js ./frontend/next.config.js
 COPY --from=frontend-builder /frontend/next-env.d.ts ./frontend/next-env.d.ts
-COPY --from=frontend-builder /frontend/tsconfig.json ./frontend/tsconfig.json 2>/dev/null || echo "No tsconfig.json"
+COPY --from=frontend-builder /frontend/tsconfig.json ./frontend/tsconfig.json
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY start.sh /app/start.sh
