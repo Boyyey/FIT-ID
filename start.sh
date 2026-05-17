@@ -62,6 +62,8 @@ echo "nginx.conf contents (first 30 lines):"
 head -30 /etc/nginx/nginx.conf
 echo ""
 echo "Launching nginx..."
+sleep 5
+echo "Giving backend more time to initialize (5s delay before nginx)..."
 nginx -g "daemon off;" 2>&1 &
 nginx_pid=$!
 echo "nginx PID: ${nginx_pid}"

@@ -6,23 +6,22 @@ from passlib.context import CryptContext
 
 from app.core.config import settings
 
-# Try to use bcrypt, fall back to argon2 if bcrypt has issues
+# Use argon2 as primary, with bcrypt as fallback if available
 try:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    print("[SECURITY] Using bcrypt for password hashing", flush=True)
-except Exception as e:
-    print(f"[SECURITY] Bcrypt failed, using argon2: {e}", flush=True)
     pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+    print("[SECURITY] Using argon2 for password hashing", flush=True)
+except Exception as e:
+    print(f"[SECURITY] Argon2 failed, trying bcrypt: {e}", flush=True)
+    try:
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        print("[SECURITY] Using bcrypt for password hashing", flush=True)
+    except Exception as e2:
+        print(f"[SECURITY] ERROR: Both argon2 and bcrypt failed: {e2}", flush=True)
+        raise
 
 
 def hash_password(plain: str) -> str:
-    # Bcrypt has a 72-byte limit; truncate if necessary to avoid ValueError
-    original_len = len(plain.encode('utf-8'))
-    if isinstance(plain, str):
-        plain_bytes = plain.encode('utf-8')
-        if len(plain_bytes) > 72:
-            plain = plain_bytes[:72].decode('utf-8', errors='ignore')
-            print(f"[SECURITY] Truncated password from {original_len} bytes to 72 bytes for bcrypt", flush=True)
+    # Argon2 has no byte limit; bcrypt has 72-byte limit but we prefer argon2
     return pwd_context.hash(plain)
 
 
