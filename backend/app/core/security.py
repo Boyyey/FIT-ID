@@ -10,6 +10,11 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(plain: str) -> str:
+    # Bcrypt has a 72-byte limit; truncate if necessary to avoid ValueError
+    if isinstance(plain, str):
+        plain_bytes = plain.encode('utf-8')
+        if len(plain_bytes) > 72:
+            plain = plain_bytes[:72].decode('utf-8', errors='ignore')
     return pwd_context.hash(plain)
 
 
