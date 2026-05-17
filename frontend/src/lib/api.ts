@@ -33,7 +33,12 @@ export async function exchangeGoogleToken(googleIdToken: string): Promise<FitIdA
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    const detail = body?.detail != null ? String(body.detail) : response.statusText;
+    let detail = response.statusText;
+    if (body?.detail != null) {
+      detail = typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail);
+    } else if (Object.keys(body || {}).length > 0) {
+      detail = JSON.stringify(body);
+    }
     throw new Error(
       `Google sign-in was rejected by the server (${response.status}). ${detail}. If this persists, confirm GOOGLE_CLIENT_ID matches in backend and frontend.`
     );
