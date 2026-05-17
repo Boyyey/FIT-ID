@@ -44,6 +44,7 @@ try {
 
 const handler = NextAuth({
   providers,
+  debug: true,
   secret: process.env.NEXTAUTH_SECRET ?? "development-nextauth-secret",
   session: {
     strategy: "jwt",
@@ -64,5 +65,13 @@ const handler = NextAuth({
     error: "/auth/error"
   }
 });
+
+// Runtime hint: log the expected Google OAuth callback URL for debugging
+try {
+  const callbackUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/callback/google`;
+  console.log("NEXTAUTH_RUNTIME: Expected Google callback URL=", callbackUrl);
+} catch (e) {
+  // ignore
+}
 
 export { handler as GET, handler as POST };
