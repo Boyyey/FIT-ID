@@ -6,7 +6,13 @@ from passlib.context import CryptContext
 
 from app.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Try to use bcrypt, fall back to argon2 if bcrypt has issues
+try:
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    print("[SECURITY] Using bcrypt for password hashing", flush=True)
+except Exception as e:
+    print(f"[SECURITY] Bcrypt failed, using argon2: {e}", flush=True)
+    pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def hash_password(plain: str) -> str:

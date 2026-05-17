@@ -7,6 +7,7 @@ sqlalchemy
 psycopg[binary]
 passlib[bcrypt]
 bcrypt>=4.1.0
+argon2-cffi
 python-jose[cryptography]
 google-auth
 requests

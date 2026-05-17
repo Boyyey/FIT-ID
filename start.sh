@@ -69,6 +69,11 @@ echo "nginx startup complete"
 echo ""
 
 echo "FitID: all processes started, monitoring..."
+sleep 2
+echo "========== Port Status Check =========="
+echo "Checking which ports are listening:"
+netstat -tuln 2>/dev/null | grep LISTEN || ss -tuln 2>/dev/null | grep LISTEN || echo "netstat/ss not available"
+echo ""
 
 while :; do
   if ! kill -0 "$backend_pid" 2>/dev/null; then
