@@ -20,7 +20,21 @@ nginx_pid=$!
 
 echo "FitID startup: nginx PID=${nginx_pid}"
 
-wait -n "$backend_pid" "$frontend_pid" "$nginx_pid"
+while :; do
+  if ! kill -0 "$backend_pid" 2>/dev/null; then
+    echo "FitID startup: backend process exited"
+    break
+  fi
+  if ! kill -0 "$frontend_pid" 2>/dev/null; then
+    echo "FitID startup: frontend process exited"
+    break
+  fi
+  if ! kill -0 "$nginx_pid" 2>/dev/null; then
+    echo "FitID startup: nginx process exited"
+    break
+  fi
+  sleep 1
+ done
 
 printf 'FitID startup: process exited, shutting down\n'
 kill "$backend_pid" "$frontend_pid" "$nginx_pid" 2>/dev/null || true
