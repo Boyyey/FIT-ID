@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ detail: "code and redirect_uri required" }, { status: 400 });
   }
 
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000/api/v1";
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? "/api/v1";
   const clientSecret =
     process.env.PARTNER_OAUTH_CLIENT_SECRET ?? "fitid-demo-partner-secret-change-me";
 

@@ -16,7 +16,7 @@ ENV NEXTAUTH_URL=http://localhost:3000
 ENV NEXTAUTH_SECRET=placeholder-nextauth-secret
 ENV GOOGLE_CLIENT_ID=placeholder-google-client-id
 ENV GOOGLE_CLIENT_SECRET=placeholder-google-client-secret
-ENV NEXT_PUBLIC_API_BASE=http://localhost:8000/api/v1
+ENV NEXT_PUBLIC_API_BASE=/api/v1
 RUN npm run build
 
 ################################################################
