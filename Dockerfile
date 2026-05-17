@@ -71,8 +71,9 @@ COPY --from=frontend-builder /frontend/next.config.js ./frontend/next.config.js
 COPY --from=frontend-builder /frontend/next-env.d.ts ./frontend/next-env.d.ts
 
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
 WORKDIR /app
 EXPOSE 80
-
-CMD bash -lc "cd /app/backend && uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers & cd /app/frontend && npm run start -- -p ${PORT} --hostname 127.0.0.1 & nginx -g 'daemon off;'"
+CMD ["sh", "/app/start.sh"]
