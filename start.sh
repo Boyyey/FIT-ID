@@ -16,11 +16,18 @@ sleep 2
 cd /app/frontend
 port="${PORT:-10000}"
 echo "FitID: starting frontend at 127.0.0.1:${port}"
-npm run start -- -p "${port}" --hostname 127.0.0.1 2>&1 &
+echo "FitID: frontend directory listing:"
+ls -la /app/frontend/ | head -10
+echo "FitID: .next directory check:"
+ls -la /app/frontend/.next/ 2>/dev/null | head -5 || echo "ERROR: .next directory missing!"
+export PORT="${port}"
+echo "FitID: running npm run start with PORT=$PORT"
+npm run start 2>&1 &
 frontend_pid=$!
 echo "FitID startup: frontend PID=${frontend_pid}"
 
-sleep 3
+echo "FitID: waiting for frontend to bind to port ${port}..."
+sleep 8
 
 echo "FitID: starting nginx"
 nginx -g "daemon off;" 2>&1 &
