@@ -342,6 +342,7 @@ export default function DashboardPage() {
                     <p style={{ margin: 0, fontWeight: 700 }}>{item.title}</p>
                     <p className="subtitle">Size {item.recommended_size}</p>
                     <p className="subtitle">Score {Math.round(item.score)}%</p>
+                    <p className="subtitle" style={{ marginTop: "0.35rem" }}>{item.advice ?? item.reason}</p>
                     <span className="badge">{item.reason}</span>
                   </article>
                 ))}

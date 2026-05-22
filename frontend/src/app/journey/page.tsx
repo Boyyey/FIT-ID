@@ -34,6 +34,7 @@ export default function JourneyPage() {
   const [fitIdCode, setFitIdCode] = useState<string>("");
   const [partnerToken, setPartnerToken] = useState<string>("");
   const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [fitFeedback, setFitFeedback] = useState<Record<string, "too-small" | "too-large" | "ok">>({});
   const [gender, setGender] = useState<"male" | "female" | "">("");
   const [heightCm, setHeightCm] = useState(170);
   const [weightKg, setWeightKg] = useState(70);
@@ -1044,8 +1045,27 @@ export default function JourneyPage() {
                   <article key={item.sku} className="panel" style={{ borderRadius: "16px", boxShadow: "none" }}>
                     <p style={{ marginTop: 0, fontWeight: 700 }}>{item.title}</p>
                     <p className="subtitle">Fit Score: {item.score}%</p>
-                    <p className="subtitle">Size: {item.recommended_size}</p>
+                    <p className="subtitle">Recommended size: {item.recommended_size}</p>
+                    <p className="subtitle" style={{ marginTop: "0.35rem" }}>{item.advice ?? item.reason}</p>
                     <p className="badge">{item.reason}</p>
+                    <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap", marginTop: "0.75rem" }}>
+                      <button type="button" className="button secondary" onClick={() => setFitFeedback((prev) => ({ ...prev, [item.sku]: "too-small" }))}>
+                        Too tight
+                      </button>
+                      <button type="button" className="button secondary" onClick={() => setFitFeedback((prev) => ({ ...prev, [item.sku]: "too-large" }))}>
+                        Too loose
+                      </button>
+                    </div>
+                    {fitFeedback[item.sku] && (
+                      <div className="panel" style={{ marginTop: "0.75rem", boxShadow: "none", borderRadius: "12px", border: "1px solid rgba(148,163,184,0.35)" }}>
+                        <p style={{ margin: 0, fontWeight: 700 }}>Fit feedback</p>
+                        <p className="subtitle" style={{ marginTop: "0.35rem" }}>
+                          {fitFeedback[item.sku] === "too-small"
+                            ? "If this feels too tight, try one size up or choose a relaxed fit version."
+                            : "If this feels too loose, try one size down or choose a more tailored fit."}
+                        </p>
+                      </div>
+                    )}
                   </article>
                 ))}
               </div>

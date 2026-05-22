@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 type TokenResponse = {
   access_token?: string;
@@ -19,6 +19,15 @@ function PartnerDemoCallbackContent() {
   const err = params.get("error");
   const [data, setData] = useState<TokenResponse | null>(null);
   const [message, setMessage] = useState("Exchanging authorization code…");
+
+  const sizeAdvice = useMemo(() => {
+    if (!data?.profile) return null;
+    const measurements = data.profile.body_measurements as Record<string, unknown> | undefined;
+    const waist = typeof measurements?.waist_cm === "number" ? measurements.waist_cm : null;
+    if (!waist) return null;
+    const suggestedSize = waist < 72 ? "XS" : waist < 80 ? "S" : waist < 92 ? "M" : waist < 104 ? "L" : "XL";
+    return `Based on your waist measurement (${waist} cm), FitID suggests size ${suggestedSize}. If this feels tight, try one size up.`;
+  }, [data]);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -72,6 +81,12 @@ function PartnerDemoCallbackContent() {
                 </p>
                 <pre style={{ whiteSpace: "pre-wrap", fontSize: "0.8rem" }}>{JSON.stringify(data.profile, null, 2)}</pre>
               </>
+            )}
+            {sizeAdvice && (
+              <div className="panel" style={{ marginTop: "0.75rem", boxShadow: "none", borderRadius: "12px" }}>
+                <p style={{ margin: 0, fontWeight: 700 }}>Partner fit advice</p>
+                <p className="subtitle" style={{ marginTop: "0.45rem" }}>{sizeAdvice}</p>
+              </div>
             )}
           </div>
         )}

@@ -12,7 +12,8 @@ const providers = [
     authorization: {
       params: {
         scope: "openid email profile",
-        prompt: "select_account",
+        prompt: "consent",
+        access_type: "offline"
       },
     },
     idToken: true,

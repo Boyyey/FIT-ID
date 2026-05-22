@@ -31,5 +31,17 @@ export async function POST(request: Request) {
   });
 
   const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const hint = !process.env.PARTNER_OAUTH_CLIENT_SECRET
+      ? "Set PARTNER_OAUTH_CLIENT_SECRET in the frontend environment so the demo exchange can verify partner access tokens."
+      : undefined;
+    return NextResponse.json(
+      {
+        detail: data.detail ?? "Token exchange failed",
+        ...(hint ? { hint } : {})
+      },
+      { status: response.status }
+    );
+  }
   return NextResponse.json(data, { status: response.status });
 }

@@ -106,6 +106,7 @@ class RecommendationResponse(BaseModel):
     score: float
     recommended_size: str
     reason: str
+    advice: str | None = None
 
 
 class DataShareConsent(BaseModel):

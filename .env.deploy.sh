@@ -2,10 +2,10 @@
 # Copy this to ".env.deploy" and fill in real values before deploying.
 # Do NOT commit real secret values to the repo.
 
-JWT_SECRET=replace-with-long-random-secret
-NEXTAUTH_SECRET=replace-with-long-random-secret
+JWT_SECRET=replace-with-a-long-random-secret
+NEXTAUTH_SECRET=replace-with-a-long-random-secret
 
-GOOGLE_CLIENT_ID=replace-with-google-client-id
+GOOGLE_CLIENT_ID=replace-with-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=replace-with-google-client-secret
 
 # Public URLs for deployed app:
