@@ -7,8 +7,16 @@ export default defineConfig({
   resolve: {
     alias: { "@": path.resolve(__dirname, "src") }
   },
+
   server: {
     port: 5174,
-    strictPort: true
+    strictPort: true,
+    allowedHosts: ["luma-artier.onrender.com"]
+  },
+
+  preview: {
+    host: "0.0.0.0",
+    port: process.env.PORT || 4173,
+    allowedHosts: ["luma-artier.onrender.com"]
   }
 });
