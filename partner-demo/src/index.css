@@ -491,3 +491,139 @@ details.paste summary {
 .fitid-drawer-paste .btn {
   width: 100%;
 }
+
+.signin-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 1.25rem;
+}
+
+.signin-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+}
+
+.signin-header {
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signin-header .brand {
+  text-decoration: none;
+}
+
+.signin-content {
+  padding: 2rem 1.75rem 2.5rem;
+}
+
+.signin-content h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.signin-subtitle {
+  margin: 0 0 2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.signin-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(20, 18, 15, 0.04);
+}
+
+.signin-btn:hover {
+  background: var(--bg);
+  border-color: #c9c2b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(20, 18, 15, 0.08);
+}
+
+.signin-btn:active {
+  transform: translateY(0);
+}
+
+.signin-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.google-btn:hover {
+  border-color: #c9c2b8;
+}
+
+.facebook-btn:hover {
+  border-color: #c9c2b8;
+}
+
+.apple-btn:hover {
+  border-color: #c9c2b8;
+}
+
+.fitid-btn {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.fitid-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+.fitid-btn .signin-icon path {
+  fill: #fff;
+}
+
+.signin-note {
+  margin: 1.75rem 0 0;
+  padding: 0.85rem 1rem;
+  background: #f8f6f3;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.signin-note strong {
+  color: var(--accent);
+}
