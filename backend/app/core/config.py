@@ -19,7 +19,8 @@ class Settings(BaseSettings):
     oauth_demo_redirect_uris: str = (
         "http://localhost:3000/partner/demo/callback,"
         "http://localhost:5174/callback,"
-        "https://luma-artier.onrender.com/callback"
+        "https://luma-artier.onrender.com/callback,"
+        "https://fit-id-uzzj.onrender.com/partner/demo/callback"
     )
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
