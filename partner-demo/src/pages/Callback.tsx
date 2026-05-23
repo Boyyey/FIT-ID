@@ -3,7 +3,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { usePartnerAuth } from "@/context/PartnerAuth";
 
-const tokenProxy = import.meta.env.VITE_TOKEN_PROXY_URL ?? "http://localhost:8787";
+const apiBase = import.meta.env.VITE_FITID_API_BASE ?? (window.location.hostname === "localhost" ? "http://localhost:8000/api/v1" : "https://fit-id-uzzj.onrender.com/api/v1");
+const tokenProxy = import.meta.env.VITE_TOKEN_PROXY_URL ?? (window.location.hostname === "localhost" ? "http://localhost:8787" : apiBase);
 
 const exchangedCodes = new Set<string>();
 
@@ -28,24 +29,53 @@ export function CallbackPage() {
     exchangedCodes.add(code);
 
     const redirectUri = `${window.location.origin}/callback`;
+    const isLocal = window.location.hostname === "localhost";
 
     void (async () => {
       try {
-        const response = await fetch(`${tokenProxy}/api/partner/exchange`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, redirect_uri: redirectUri })
-        });
-        const json = (await response.json()) as {
-          access_token?: string;
-          detail?: string;
-          profile?: Record<string, unknown>;
-          scope?: string;
-          token_type?: string;
-        };
+        let response;
+        let json;
+
+        if (isLocal) {
+          // Local development: use token proxy
+          response = await fetch(`${tokenProxy}/api/partner/exchange`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, redirect_uri: redirectUri })
+          });
+          json = (await response.json()) as {
+            access_token?: string;
+            detail?: string;
+            profile?: Record<string, unknown>;
+            scope?: string;
+            token_type?: string;
+          };
+        } else {
+          // Production: call FitID backend OAuth token endpoint directly
+          response = await fetch(`${apiBase}/oauth/token`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              grant_type: "authorization_code",
+              code,
+              client_id: "fitid_demo_store",
+              client_secret: "fitid-demo-partner-secret-change-me",
+              redirect_uri: redirectUri
+            })
+          });
+          json = (await response.json()) as {
+            access_token?: string;
+            error?: string;
+            error_description?: string;
+            scope?: string;
+            token_type?: string;
+          };
+        }
+
         if (!response.ok) {
           exchangedCodes.delete(code);
-          setMessage(json.detail ? String(json.detail) : "Token exchange failed.");
+          const errorMsg = (json as any).detail || (json as any).error_description || (json as any).error || "Token exchange failed.";
+          setMessage(errorMsg);
           return;
         }
         if (!json.access_token) {
@@ -57,13 +87,14 @@ export function CallbackPage() {
           access_token: json.access_token,
           token_type: json.token_type,
           scope: json.scope,
-          profile: json.profile ?? null,
+          profile: (json as any).profile ?? null,
           receivedAt: Date.now()
         });
         navigate("/", { replace: true });
-      } catch {
+      } catch (e) {
         exchangedCodes.delete(code);
-        setMessage("Could not reach the token proxy. Is `npm run dev` running?");
+        const errorMsg = isLocal ? "Could not reach the token proxy. Is `npm run dev` running?" : "Could not connect to FitID backend.";
+        setMessage(errorMsg);
       }
     })();
   }, [navigate, params, setSession]);
