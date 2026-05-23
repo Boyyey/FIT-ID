@@ -1,17 +1,22 @@
-import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { buildAuthorizeUrl } from "@/lib/oauth";
-
-const clientId = import.meta.env.VITE_PARTNER_CLIENT_ID ?? "fitid_demo_store";
+import { usePartnerAuth } from "@/context/PartnerAuth";
 
 export function SignInPage() {
-  const authorizeHref = useMemo(() => {
-    const apiBase = typeof window !== "undefined" && window.location.hostname === "localhost"
-      ? "http://localhost:8000/api/v1"
-      : "https://fit-id-uzzj.onrender.com/api/v1";
-    const redirectUri = typeof window !== "undefined" ? `${window.location.origin}/callback` : "";
-    return buildAuthorizeUrl({ apiBase, clientId, redirectUri });
-  }, []);
+  const navigate = useNavigate();
+  const { setSession } = usePartnerAuth();
+
+  const handleFitIdSignIn = () => {
+    // Set a fake session for demo purposes
+    setSession({
+      access_token: "demo_access_token_" + Date.now(),
+      token_type: "bearer",
+      scope: "body_measurements,fit_preferences,allergies,posture,skin_tone",
+      profile: null,
+      receivedAt: Date.now()
+    });
+    navigate("/", { replace: true });
+  };
 
   const handleSocialSignIn = (provider: string) => {
     alert(`${provider} sign-in is not available in this demo. Please use FitID to continue.`);
@@ -87,12 +92,16 @@ export function SignInPage() {
               Continue with Apple
             </button>
 
-            <a className="signin-btn fitid-btn" href={authorizeHref}>
+            <button
+              className="signin-btn fitid-btn"
+              onClick={handleFitIdSignIn}
+              type="button"
+            >
               <svg className="signin-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#1e3a32" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.80 3.97-2.1 5.39z" />
               </svg>
               Continue with FitID
-            </a>
+            </button>
           </div>
         </div>
       </div>
