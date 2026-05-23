@@ -158,3 +158,13 @@ def oauth_token(payload: OAuthTokenRequest, db: Session = Depends(get_db)) -> di
         "scope": row.scope,
         "profile": _profile_subset(row.scope, profile),
     }
+
+
+@router.post("/seed-demo-client")
+def seed_demo_client(db: Session = Depends(get_db)) -> dict[str, str]:
+    """Manually seed the demo OAuth client - for production setup."""
+    from app.core.config import settings
+    from app.db.session import _seed_demo_oauth_client
+
+    _seed_demo_oauth_client(db)
+    return {"status": "success", "message": "Demo OAuth client seeded"}
