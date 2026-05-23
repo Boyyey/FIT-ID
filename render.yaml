@@ -29,4 +29,4 @@ services:
       - key: OAUTH_DEMO_CLIENT_SECRET
         secure: true
       - key: OAUTH_DEMO_REDIRECT_URIS
-        value: "https://fit-id-uzzj.onrender.com/partner/demo/callback,https://fit-id-uzzj.onrender.com/callback"
+        value: "https://fit-id-uzzj.onrender.com/partner/demo/callback,https://fit-id-uzzj.onrender.com/callback,https://luma-artier.onrender.com/callback"
