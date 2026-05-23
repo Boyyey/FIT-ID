@@ -2,11 +2,13 @@ import { useMemo } from "react";
 
 import { buildAuthorizeUrl } from "@/lib/oauth";
 
-const apiBase = import.meta.env.VITE_FITID_API_BASE ?? (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:8000/api/v1" : "https://fit-id-uzzj.onrender.com/api/v1");
 const clientId = import.meta.env.VITE_PARTNER_CLIENT_ID ?? "fitid_demo_store";
 
 export function SignInPage() {
   const authorizeHref = useMemo(() => {
+    const apiBase = typeof window !== "undefined" && window.location.hostname === "localhost"
+      ? "http://localhost:8000/api/v1"
+      : "https://fit-id-uzzj.onrender.com/api/v1";
     const redirectUri = typeof window !== "undefined" ? `${window.location.origin}/callback` : "";
     return buildAuthorizeUrl({ apiBase, clientId, redirectUri });
   }, []);

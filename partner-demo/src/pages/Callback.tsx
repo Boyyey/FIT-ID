@@ -3,9 +3,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { usePartnerAuth } from "@/context/PartnerAuth";
 
-const apiBase = import.meta.env.VITE_FITID_API_BASE ?? (window.location.hostname === "localhost" ? "http://localhost:8000/api/v1" : "https://fit-id-uzzj.onrender.com/api/v1");
-const tokenProxy = import.meta.env.VITE_TOKEN_PROXY_URL ?? (window.location.hostname === "localhost" ? "http://localhost:8787" : apiBase);
-
 const exchangedCodes = new Set<string>();
 
 export function CallbackPage() {
@@ -30,6 +27,8 @@ export function CallbackPage() {
 
     const redirectUri = `${window.location.origin}/callback`;
     const isLocal = window.location.hostname === "localhost";
+    const apiBase = isLocal ? "http://localhost:8000/api/v1" : "https://fit-id-uzzj.onrender.com/api/v1";
+    const tokenProxy = isLocal ? "http://localhost:8787" : apiBase;
 
     void (async () => {
       try {
